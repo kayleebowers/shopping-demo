@@ -2,8 +2,14 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { initializeApp } from "firebase/app";
 import { getFireStore } from "firebase/firestore";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+// create navigator
+const Stack = createNativeStackNavigator();
 
 const App = () => {
+
   // app's Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyBg5jzJn7POPBohuVoACW5z_dK4ae5f-9k",
@@ -18,13 +24,13 @@ const App = () => {
   const app = initializeApp(firebaseConfig);
 
   // initialize Cloud Firestore 
-  const db = getFirestore(app);
+  const db = getFirestore(app);  
 
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
