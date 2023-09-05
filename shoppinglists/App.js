@@ -4,6 +4,7 @@ import { initializeApp } from "firebase/app";
 import { getFireStore } from "firebase/firestore";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import ShoppingLists from "./components/ShoppingLists";
 
 // create navigator
 const Stack = createNativeStackNavigator();
@@ -28,7 +29,11 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName="ShoppingLists">
+        {/* pass Firestore database to component as prop */}
+        <Stack.Screen name="ShoppingLists">
+          { props => <ShoppingLists db={db} {...props} />}
+        </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );
