@@ -9,8 +9,8 @@ const ShoppingLists = ({ db }) => {
   const fetchShoppingLists = async () => {
     const listsDocuments = await getDocs(collection(db, "shoppinglists"));
     let newLists = [];
-    listsDocuments.forEach(docObject => {
-      newLists.push({id: docObject.id, ...docObject.data() });
+    listsDocuments.forEach((docObject) => {
+      newLists.push({ id: docObject.id, ...docObject.data() });
     });
     setLists(newLists);
   };
@@ -18,17 +18,13 @@ const ShoppingLists = ({ db }) => {
   // rerender on list change
   useEffect(() => {
     fetchShoppingLists();
-  }, (`${lists}`));
+  }, [`${lists}`]);
 
   return (
-    <View>
+    <View style={styles.container}>
       <FlatList
         data={lists}
-        renderItem={({ item }) => (
-          <Text>
-            {item.name}: {item.items.join(", ")}
-          </Text>
-        )}
+        renderItem={({ item }) => <Text>{item.name}: {item.items.join(", ")}</Text>}
       />
     </View>
   );
