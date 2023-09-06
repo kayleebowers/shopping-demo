@@ -1,6 +1,6 @@
 import { View, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, Platform, KeyboardAvoidingView, Alert } from "react-native";
 import { useState, useEffect } from "react";
-import { addDoc, collection, getDocs, onSnapshot } from "firebase/firestore";
+import { addDoc, collection, onSnapshot, query, where } from "firebase/firestore";
 
 const ShoppingLists = ({ db, route }) => {
   // get userID
@@ -13,7 +13,9 @@ const ShoppingLists = ({ db, route }) => {
 
   // fetch data in real time with onSnapshot
   useEffect(() => {
-    const unsubShoppingLists = onSnapshot(collection(db, "shoppinglists"), (documentsSnapshot) => {
+    // only show lists the user created
+    const dbQuery = query(collection(db, "shoppinglists"), where("uid", "==", userID)); 
+    const unsubShoppingLists = onSnapshot(dbQuery, (documentsSnapshot) => {
       let newLists = [];
       documentsSnapshot.forEach(doc => {
         newLists.push({id: doc.id, ...doc.data() })
