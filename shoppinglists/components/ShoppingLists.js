@@ -1,6 +1,6 @@
 import { View, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, Platform, KeyboardAvoidingView, Alert } from "react-native";
 import { useState, useEffect } from "react";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import { addDoc, collection, getDocs, onSnapshot } from "firebase/firestore";
 
 const ShoppingLists = ({ db }) => {
   const [lists, setLists] = useState([]);
