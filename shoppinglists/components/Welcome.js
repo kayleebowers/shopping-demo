@@ -2,6 +2,10 @@ import { StyleSheet, View, Text, TouchableOpacity, Alert } from "react-native";
 import { getAuth, signInAnonymously } from "firebase/auth";
 
 const Welcome = ({ navigation }) => {
+  // initialize Firebase authentication handler
+  const auth = getAuth();
+
+  // log anonymous users in
   const signInUser = () => {
     signInAnonymously(auth)
       // result from promise is object with temporary user account information
