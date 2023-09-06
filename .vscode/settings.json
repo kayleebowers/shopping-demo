@@ -3,6 +3,7 @@
         "appspot",
         "Bohu",
         "firebaseapp",
-        "firestore"
+        "firestore",
+        "shoppinglists"
     ]
 }
