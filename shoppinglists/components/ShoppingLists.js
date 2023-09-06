@@ -4,6 +4,9 @@ import { collection, getDocs } from "firebase/firestore";
 
 const ShoppingLists = ({ db }) => {
   const [lists, setLists] = useState([]);
+  const [listName, setListName] = useState("");
+  const [item1, setItem1] = useState("");
+  const [item2, setItem2] = useState("");
 
   // fetch lists from Firestore db
   const fetchShoppingLists = async () => {
