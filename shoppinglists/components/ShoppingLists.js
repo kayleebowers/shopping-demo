@@ -2,7 +2,10 @@ import { View, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, Platform
 import { useState, useEffect } from "react";
 import { addDoc, collection, getDocs, onSnapshot } from "firebase/firestore";
 
-const ShoppingLists = ({ db }) => {
+const ShoppingLists = ({ db, route }) => {
+  // get userID
+  const { userID } = route.params;
+
   const [lists, setLists] = useState([]);
   const [listName, setListName] = useState("");
   const [item1, setItem1] = useState("");
@@ -85,6 +88,7 @@ const ShoppingLists = ({ db }) => {
           style={styles.addButton}
           onPress={() => { 
             const newList = {
+              uid: userID,
               name: listName,
               items: [item1, item2]
             }
