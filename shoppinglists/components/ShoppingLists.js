@@ -8,20 +8,37 @@ const ShoppingLists = ({ db }) => {
   const [item1, setItem1] = useState("");
   const [item2, setItem2] = useState("");
 
-  // fetch lists from Firestore db
-  const fetchShoppingLists = async () => {
-    const listsDocuments = await getDocs(collection(db, "shoppinglists"));
-    let newLists = [];
-    listsDocuments.forEach((docObject) => {
-      newLists.push({ id: docObject.id, ...docObject.data() });
-    });
-    setLists(newLists);
-  };
-
-  // rerender on list change
+  // fetch data in real time with onSnapshot
   useEffect(() => {
-    fetchShoppingLists();
-  }, [`${lists}`]);
+    const unsubShoppingLists = onSnapshot(collection(db, "shoppinglists"), (documentsSnapshot) => {
+      let newLists = [];
+      documentsSnapshot.forEach(doc => {
+        newLists.push({id: doc.id, ...doc.data() })
+      });
+      setLists(newLists);
+    });
+
+    // clean up code to prevent memory leaks
+    return () => {
+      if (unsubShoppingLists) unsubShoppingLists();
+    }
+  }, []);
+  
+  // not real time data approach
+  // // fetch lists from Firestore db
+  // const fetchShoppingLists = async () => {
+  //   const listsDocuments = await getDocs(collection(db, "shoppinglists"));
+  //   let newLists = [];
+  //   listsDocuments.forEach((docObject) => {
+  //     newLists.push({ id: docObject.id, ...docObject.data() });
+  //   });
+  //   setLists(newLists);
+  // };
+
+  // // rerender on list change
+  // useEffect(() => {
+  //   fetchShoppingLists();
+  // }, [`${lists}`]);
 
   // add new list to collection with user input
   const addShoppingList = async (newList) => {
