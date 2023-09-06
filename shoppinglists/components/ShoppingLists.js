@@ -1,6 +1,6 @@
-import { View, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, Platform, KeyboardAvoidingView } from "react-native";
+import { View, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, Platform, KeyboardAvoidingView, Alert } from "react-native";
 import { useState, useEffect } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import { addDoc, collection, getDocs } from "firebase/firestore";
 
 const ShoppingLists = ({ db }) => {
   const [lists, setLists] = useState([]);
@@ -23,6 +23,16 @@ const ShoppingLists = ({ db }) => {
     fetchShoppingLists();
   }, [`${lists}`]);
 
+  // add new list to collection with user input
+  const addShoppingList = async (newList) => {
+    const newListRef = await addDoc(collection(db, "shoppinglists"), newList);
+    // check for successful addition
+    if (newListRef.id) {
+      Alert.alert(`The list ${listName} has been added`);
+    } else {
+      Alert.alert("Something went wrong. Try again later.");
+    }
+  } 
   return (
     <View style={styles.container}>
       <FlatList
@@ -55,7 +65,13 @@ const ShoppingLists = ({ db }) => {
         />
         <TouchableOpacity 
           style={styles.addButton}
-          onPress={() => { }}
+          onPress={() => { 
+            const newList = {
+              name: listName,
+              items: [item1, item2]
+            }
+            addShoppingList(newList);
+          }}
         >
           <Text style={styles.addButtonText}>Add</Text>
         </TouchableOpacity>
