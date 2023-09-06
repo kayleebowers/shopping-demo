@@ -4,6 +4,7 @@
         "Bohu",
         "firebaseapp",
         "firestore",
-        "shoppinglists"
+        "shoppinglists",
+        "unsub"
     ]
 }
