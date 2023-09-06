@@ -28,6 +28,7 @@ const ShoppingLists = ({ db }) => {
     const newListRef = await addDoc(collection(db, "shoppinglists"), newList);
     // check for successful addition
     if (newListRef.id) {
+      setLists([newList, ...lists]);
       Alert.alert(`The list ${listName} has been added`);
     } else {
       Alert.alert("Something went wrong. Try again later.");
