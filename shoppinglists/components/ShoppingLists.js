@@ -23,8 +23,13 @@ const ShoppingLists = ({ db }) => {
   return (
     <View style={styles.container}>
       <FlatList
+        style={styles.listsContainer}
         data={lists}
-        renderItem={({ item }) => <Text>{item.name}: {item.items.join(", ")}</Text>}
+        renderItem={({ item }) => 
+          <View style={styles.listItem}>
+            <Text>{item.name}: {item.items.join(", ")}</Text>
+          </View>
+        }
       />
       <View style={styles.listForm}>
         <TextInput 
