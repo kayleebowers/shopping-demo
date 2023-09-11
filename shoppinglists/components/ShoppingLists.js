@@ -16,7 +16,7 @@ const ShoppingLists = ({ db, route }) => {
   useEffect(() => {
     // only show lists the user created
     const dbQuery = query(collection(db, "shoppinglists"), where("uid", "==", userID)); 
-    const unsubShoppingLists = onSnapshot(dbQuery, async (documentsSnapshot) => {
+    const unsubShoppingLists = onSnapshot(dbQuery, (documentsSnapshot) => {
       let newLists = [];
       documentsSnapshot.forEach(doc => {
         newLists.push({id: doc.id, ...doc.data() })
