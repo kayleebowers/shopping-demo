@@ -21,12 +21,7 @@ const ShoppingLists = ({ db, route }) => {
       documentsSnapshot.forEach(doc => {
         newLists.push({id: doc.id, ...doc.data() })
       });
-      // add data to React Native's AsyncStorage
-      try {
-        await AsyncStorage.setItem("shopping_lists", JSON.stringify(newLists));
-      } catch (error) {
-          console.log(error.message);
-      }
+      cacheShoppingLists(newLists);
       setLists(newLists);
     });
 
@@ -35,6 +30,15 @@ const ShoppingLists = ({ db, route }) => {
       if (unsubShoppingLists) unsubShoppingLists();
     }
   }, []);
+
+   // add data to React Native's AsyncStorage
+   const cacheShoppingLists = async (listsToCache) => {
+    try {
+      await AsyncStorage.setItem("shopping_lists", JSON.stringify(listsToCache));
+    } catch (error) {
+        console.log(error.message);
+    }
+   }
   
   // not real time data approach
   // // fetch lists from Firestore db
