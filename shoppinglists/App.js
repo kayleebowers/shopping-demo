@@ -1,11 +1,13 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, LogBox, Alert } from "react-native";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ShoppingLists from "./components/ShoppingLists";
 import Welcome from "./components/Welcome";
+import { useNetInfo } from "@react-native-community/netinfo";
+import { useEffect } from "react";
 
 // create navigator
 const Stack = createNativeStackNavigator();
@@ -27,6 +29,14 @@ const App = () => {
 
   // initialize Cloud Firestore 
   const db = getFirestore(app);  
+
+  // define state to track network connectivity status 
+  const connectionStatus = useNetInfo();
+
+  // alert user if connection is lost
+  useEffect(() => {
+    if (connectionStatus.isConnected === false) Alert.alert("Connection lost!")
+  }, [connectionStatus.isConnected]);
 
   return (
     <NavigationContainer>
