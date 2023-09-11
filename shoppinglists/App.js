@@ -50,7 +50,7 @@ const App = () => {
         <Stack.Screen name="Welcome" component={Welcome} />
         {/* pass Firestore database to component as prop */}
         <Stack.Screen name="ShoppingLists">
-          { props => <ShoppingLists db={db} {...props} />}
+          { props => <ShoppingLists isConnected={connectionStatus.isConnected} db={db} {...props} />}
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
