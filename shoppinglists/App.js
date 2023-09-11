@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View, LogBox, Alert } from "react-native";
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, disableNetwork, enableNetwork } from "firebase/firestore";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ShoppingLists from "./components/ShoppingLists";
@@ -33,9 +33,15 @@ const App = () => {
   // define state to track network connectivity status 
   const connectionStatus = useNetInfo();
 
-  // alert user if connection is lost
+  // alert user if connection is lost 
   useEffect(() => {
-    if (connectionStatus.isConnected === false) Alert.alert("Connection lost!")
+    if (connectionStatus.isConnected === false) {
+      Alert.alert("Connection lost!");
+      // prevent Firebase from attempting to reconnect to Firestore db until connection is restored
+      disableNetwork(db);
+    } else if (connectionStatus.isConnected === true) {
+      enableNetwork(db);
+    }
   }, [connectionStatus.isConnected]);
 
   return (
