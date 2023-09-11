@@ -1,6 +1,7 @@
 import { View, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, Platform, KeyboardAvoidingView, Alert } from "react-native";
 import { useState, useEffect } from "react";
 import { addDoc, collection, onSnapshot, query, where } from "firebase/firestore";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ShoppingLists = ({ db, route }) => {
   // get userID
@@ -15,11 +16,17 @@ const ShoppingLists = ({ db, route }) => {
   useEffect(() => {
     // only show lists the user created
     const dbQuery = query(collection(db, "shoppinglists"), where("uid", "==", userID)); 
-    const unsubShoppingLists = onSnapshot(dbQuery, (documentsSnapshot) => {
+    const unsubShoppingLists = onSnapshot(dbQuery, async (documentsSnapshot) => {
       let newLists = [];
       documentsSnapshot.forEach(doc => {
         newLists.push({id: doc.id, ...doc.data() })
       });
+      // add data to React Native's AsyncStorage
+      try {
+        await AsyncStorage.setItem("shopping_lists", JSON.stringify(newLists));
+      } catch (error) {
+          console.log(error.message);
+      }
       setLists(newLists);
     });
 
