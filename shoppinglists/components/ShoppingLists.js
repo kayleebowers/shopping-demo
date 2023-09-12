@@ -21,7 +21,7 @@ const ShoppingLists = ({ db, route, isConnected }) => {
       // deregister current onSnapshot() listener to avoid registering multiple listeners on connection change
       if (unsubShoppingLists) unsubShoppingLists();
       unsubShoppingLists = null;
-      
+
       // only show lists the user created
       const dbQuery = query(collection(db, "shoppinglists"), where("uid", "==", userID)); 
       unsubShoppingLists = onSnapshot(dbQuery, (documentsSnapshot) => {
@@ -96,39 +96,41 @@ const ShoppingLists = ({ db, route, isConnected }) => {
           </View>
         }
       />
-      <View style={styles.listForm}>
-        <TextInput 
-          style={styles.listName}
-          placeholder="List Name"
-          value={listName}
-          onChangeText={setListName}
-        />
-        <TextInput
-          style={styles.item}
-          placeholder="Item #1"
-          value={item1}
-          onChangeText={setItem1}
-        />
-        <TextInput
-          style={styles.item}
-          placeholder="Item #2"
-          value={item2}
-          onChangeText={setItem2}
-        />
-        <TouchableOpacity 
-          style={styles.addButton}
-          onPress={() => { 
-            const newList = {
-              uid: userID,
-              name: listName,
-              items: [item1, item2]
-            }
-            addShoppingList(newList);
-          }}
-        >
-          <Text style={styles.addButtonText}>Add</Text>
-        </TouchableOpacity>
-      </View>
+      {(isConnected === true) ? (
+        <View style={styles.listForm}>
+          <TextInput 
+            style={styles.listName}
+            placeholder="List Name"
+            value={listName}
+            onChangeText={setListName}
+          />
+          <TextInput
+            style={styles.item}
+            placeholder="Item #1"
+            value={item1}
+            onChangeText={setItem1}
+          />
+          <TextInput
+            style={styles.item}
+            placeholder="Item #2"
+            value={item2}
+            onChangeText={setItem2}
+          />
+          <TouchableOpacity 
+            style={styles.addButton}
+            onPress={() => { 
+              const newList = {
+                uid: userID,
+                name: listName,
+                items: [item1, item2]
+              }
+              addShoppingList(newList);
+            }}
+          >
+            <Text style={styles.addButtonText}>Add</Text>
+          </TouchableOpacity>
+        </View>     
+      ) : null }
       {Platform.OS === "ios" ? <KeyboardAvoidingView behavior="padding" /> : null}
     </View>
 
