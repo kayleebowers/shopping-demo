@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { addDoc, collection, onSnapshot, query, where } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const ShoppingLists = ({ db, route }) => {
+const ShoppingLists = ({ db, route, isConnected }) => {
   // get userID
   const { userID } = route.params;
 
@@ -24,7 +24,6 @@ const ShoppingLists = ({ db, route }) => {
       cacheShoppingLists(newLists);
       setLists(newLists);
     });
-
     // clean up code to prevent memory leaks
     return () => {
       if (unsubShoppingLists) unsubShoppingLists();
@@ -39,6 +38,12 @@ const ShoppingLists = ({ db, route }) => {
         console.log(error.message);
     }
    }
+
+  // load cached lists
+  const loadCachedLists = async () => {
+    const cachedLists = await AsyncStorage.getItem("shopping_lists") || [];
+    setLists(JSON.parse(cachedLists));
+  }
   
   // not real time data approach
   // // fetch lists from Firestore db
@@ -67,6 +72,7 @@ const ShoppingLists = ({ db, route }) => {
       Alert.alert("Something went wrong. Try again later.");
     }
   } 
+
   return (
     <View style={styles.container}>
       <FlatList
