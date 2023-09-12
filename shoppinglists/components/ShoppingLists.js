@@ -14,16 +14,21 @@ const ShoppingLists = ({ db, route, isConnected }) => {
 
   // fetch data in real time with onSnapshot
   useEffect(() => {
-    // only show lists the user created
-    const dbQuery = query(collection(db, "shoppinglists"), where("uid", "==", userID)); 
-    const unsubShoppingLists = onSnapshot(dbQuery, (documentsSnapshot) => {
-      let newLists = [];
-      documentsSnapshot.forEach(doc => {
-        newLists.push({id: doc.id, ...doc.data() })
+    if (isConnected === true ) {
+      // only show lists the user created
+      const dbQuery = query(collection(db, "shoppinglists"), where("uid", "==", userID)); 
+      const unsubShoppingLists = onSnapshot(dbQuery, (documentsSnapshot) => {
+        let newLists = [];
+        documentsSnapshot.forEach(doc => {
+          newLists.push({id: doc.id, ...doc.data() })
+        });
+        cacheShoppingLists(newLists);
+        setLists(newLists);
       });
-      cacheShoppingLists(newLists);
-      setLists(newLists);
-    });
+    // load cached data if there is no network connection
+    } else {
+      loadCachedLists();
+    }
     // clean up code to prevent memory leaks
     return () => {
       if (unsubShoppingLists) unsubShoppingLists();
