@@ -12,12 +12,19 @@ const ShoppingLists = ({ db, route, isConnected }) => {
   const [item1, setItem1] = useState("");
   const [item2, setItem2] = useState("");
 
-  // fetch data in real time with onSnapshot
+  // declare outside use effect to properly disable old listeners and prevent memory leaks
+  let unsubShoppingLists;
+
+  // fetch data in real time with onSnapshot or cache (update on network connection change)
   useEffect(() => {
     if (isConnected === true ) {
+      // deregister current onSnapshot() listener to avoid registering multiple listeners on connection change
+      if (unsubShoppingLists) unsubShoppingLists();
+      unsubShoppingLists = null;
+      
       // only show lists the user created
       const dbQuery = query(collection(db, "shoppinglists"), where("uid", "==", userID)); 
-      const unsubShoppingLists = onSnapshot(dbQuery, (documentsSnapshot) => {
+      unsubShoppingLists = onSnapshot(dbQuery, (documentsSnapshot) => {
         let newLists = [];
         documentsSnapshot.forEach(doc => {
           newLists.push({id: doc.id, ...doc.data() })
@@ -33,7 +40,7 @@ const ShoppingLists = ({ db, route, isConnected }) => {
     return () => {
       if (unsubShoppingLists) unsubShoppingLists();
     }
-  }, []);
+  }, [isConnected]);
 
    // add data to React Native's AsyncStorage
    const cacheShoppingLists = async (listsToCache) => {
